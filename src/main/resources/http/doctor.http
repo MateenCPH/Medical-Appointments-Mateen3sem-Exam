@@ -50,29 +50,35 @@ GET {{url}}/doctors
 GET {{url}}/doctors/6
 
 ###
-GET {{url}}/doctors/speciality/familyø
+GET {{url}}/doctors/speciality/empty
 
 ###
-GET {{url}}/plants/maxHeight/300
-
-###
-GET {{url}}/plants/plantNames
-
-###
-GET {{url}}/plants/pantNamesSorted
+GET {{url}}/doctors/birthday/range/1970-01-01/1981-01-01
 
 ###
 
-POST {{url}}/plants
+POST {{url}}/doctors
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{jwt_token}}
 
 {
-  "plantType": "ROSE",
-  "plantName": "myPlantName",
-  "maxHeight": 100,
-  "plantPrice": 20.00
+  "name": "My created doctor",
+  "dateOfBirth": "2023-01-01",
+  "yearOfGraduation": 2010,
+  "clinic": "My clinic",
+  "speciality": "mySpeciality"
 }
 
 ###
+PUT {{url}}/doctors/6
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "name": 123
+}
+
+###
+DELETE {{url}}/doctors/6

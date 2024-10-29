@@ -19,6 +19,7 @@ public class DoctorRoutes {
             get("/speciality/{speciality}", doctorController::readBySpeciality, Role.ANYONE);
             get("/birthday/range/{startDate}/{endDate}", doctorController::readyByBirthdayRange, Role.ANYONE);
             put("/{id}", doctorController::update);
+            delete("/{id}", doctorController::delete);
         };
     }
 }

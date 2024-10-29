@@ -6,7 +6,9 @@ import dat.daos.impl.DoctorDAO;
 import dat.dtos.DoctorDTO;
 import dat.entities.Doctor;
 import dat.exceptions.ApiException;
+import dat.exceptions.Message;
 import io.javalin.http.Context;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
@@ -26,8 +28,9 @@ public class DoctorController implements IController<DoctorDTO, Integer> {
 
     @Override
     public void readById(Context ctx) {
+        int id;
         try {
-            int id = ctx.pathParamAsClass("id", Integer.class).check(this::validatePrimaryKey, "Not a valid id").get();
+            id = ctx.pathParamAsClass("id", Integer.class).check(this::validatePrimaryKey, "Not a valid id").get();
             DoctorDTO doctorDTO = dao.readById(id);
             ctx.res().setStatus(200);
             ctx.json(doctorDTO);
@@ -101,21 +104,44 @@ public class DoctorController implements IController<DoctorDTO, Integer> {
             ctx.json(createdDoctor);
         } catch (ApiException e) {
             LOGGER.error("Error creating doctor: ", e);
-            ctx.status(e.getStatusCode()).json(new ApiException(e.getStatusCode(), e.getMessage()));
+            ctx.status(e.getStatusCode()).json(new Message(e.getStatusCode(), e.getMessage()));
         } catch (Exception e) {
-            LOGGER.error("An error occurred while creating doctor: ", e);
-            ctx.status(500).json(new ApiException(500, "Internal server error"));
+            LOGGER.error("An unexpected error occurred while creating doctor: ", e);
+            ctx.status(500).json(new Message(500, "Internal server error"));
         }
     }
 
     @Override
     public void update(Context ctx) {
-        // Implement update logic with proper exception handling
+        try {
+            int id = ctx.pathParamAsClass("id", Integer.class).check(this::validatePrimaryKey, "Not a valid id").get();
+
+            DoctorDTO jsonRequest = ctx.bodyAsClass(DoctorDTO.class);
+            DoctorDTO updatedDoctor = dao.update(id, jsonRequest);
+            ctx.res().setStatus(201);
+            ctx.json(updatedDoctor);
+        } catch (ApiException e) {
+            LOGGER.error("Error updating doctor: ", e);
+            ctx.status(e.getStatusCode()).json(new Message(e.getStatusCode(), e.getMessage()));
+        } catch (Exception e) {
+            LOGGER.error("An unexpected error occurred while updating doctor: ", e);
+            ctx.status(500).json(new ApiException(500, "Internal server error"));
+        }
     }
 
     @Override
     public void delete(Context ctx) {
-        // Implement delete logic with proper exception handling
+        try {
+            int id = ctx.pathParamAsClass("id", Integer.class).check(this::validatePrimaryKey, "Not a valid id").get();
+            dao.delete(id);
+            ctx.res().setStatus(204);
+        } catch (ApiException e) {
+            LOGGER.error("Error deleting doctor: ", e);
+            ctx.status(e.getStatusCode()).json(new Message(e.getStatusCode(), e.getMessage()));
+        } catch (Exception e) {
+            LOGGER.error("An unexpected error occurred while deleting doctor: ", e);
+            ctx.status(500).json(new Message(500, "Internal server error"));
+        }
     }
 
     @Override

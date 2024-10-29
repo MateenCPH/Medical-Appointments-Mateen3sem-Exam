@@ -1,5 +1,6 @@
 package dat.config;
 
+import dat.entities.Appointment;
 import dat.entities.Doctor;
 import dat.security.entities.Role;
 import dat.security.entities.User;
@@ -43,6 +44,7 @@ public class HibernateConfig {
     // TODO: IMPORTANT: Add Entity classes here for them to be registered with Hibernate
     private static void getAnnotationConfiguration(Configuration configuration) {
         configuration.addAnnotatedClass(Doctor.class);
+        configuration.addAnnotatedClass(Appointment.class);
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(Role.class);
     }

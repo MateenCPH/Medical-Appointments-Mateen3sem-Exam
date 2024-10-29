@@ -49,8 +49,8 @@ public class ApplicationConfig {
     }
 
     private static void generalExceptionHandler(Exception e, Context ctx) {
-        logger.error("An unhandled exception occurred", e);
-        ctx.status(500).json(Utils.convertToJsonMessage(ctx, "error", "Internal server error"));
+        logger.error("An unhandled exception occurred", e.getMessage());
+        ctx.json(Utils.convertToJsonMessage(ctx, "error", e.getMessage()));
     }
 
     public static void apiExceptionHandler(ApiException e, Context ctx) {
