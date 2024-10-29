@@ -44,13 +44,13 @@ Accept: application/json
 Authorization: Bearer {{jwt_token}}
 
 ###
-GET {{url}}/plants
+GET {{url}}/doctors
 
 ###
-GET {{url}}/plants/1
+GET {{url}}/doctors/6
 
 ###
-GET {{url}}/plants/type/ROSE
+GET {{url}}/doctors/speciality/familyø
 
 ###
 GET {{url}}/plants/maxHeight/300
@@ -74,22 +74,5 @@ Authorization: Bearer {{jwt_token}}
   "maxHeight": 100,
   "plantPrice": 20.00
 }
-
-###
-
-#PUT {{url}}/hotels/3
-#Content-Type: application/json
-#Accept: application/json
-#Authorization: Bearer {{jwt_token}}
-#
-#{
-#  "hotelName": "Ritz Carlton",
-#  "hotelAddress": "London City",
-#  "hotelType": "LUXURY"
-#}
-
-###
-
-#DELETE {{url}}/hotels/5
 
 ###
