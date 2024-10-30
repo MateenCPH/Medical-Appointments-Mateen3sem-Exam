@@ -9,6 +9,7 @@ import io.javalin.http.Context;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -52,6 +53,7 @@ public class Utils {
         Map<String, String> msgMap = new HashMap<>();
         msgMap.put(property, message);  // Put the message in the map
         msgMap.put("status", String.valueOf(ctx.status()));  // Put the status in the map
+        msgMap.put("timestamp", String.valueOf(LocalDateTime.now()));
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.writeValueAsString(msgMap);  // Convert the map to JSON

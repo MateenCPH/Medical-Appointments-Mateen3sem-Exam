@@ -1,5 +1,7 @@
 package dat.daos.impl;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import dat.daos.IDAO;
 import dat.dtos.DoctorDTO;
 import dat.entities.Doctor;
@@ -12,7 +14,7 @@ import jakarta.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.util.List;
 
-public class DoctorDAO implements IDAO<DoctorDTO, Integer, LocalDate, LocalDate, Doctor.DoctorSpeciality> {
+public class DoctorDAO implements IDAO<DoctorDTO, Integer> {
 
     private static DoctorDAO instance;
     private static EntityManagerFactory emf;
@@ -23,17 +25,6 @@ public class DoctorDAO implements IDAO<DoctorDTO, Integer, LocalDate, LocalDate,
             instance = new DoctorDAO();
         }
         return instance;
-    }
-
-    @Override
-    public DoctorDTO readById(Integer id) {
-        try (EntityManager em = emf.createEntityManager()) {
-            Doctor doctor = em.find(Doctor.class, id);
-            if (doctor == null) {
-                throw new EntityNotFoundException("Doctor with id: " + id + " not found");
-            }
-            return new DoctorDTO(doctor);
-        }
     }
 
     @Override
@@ -49,6 +40,16 @@ public class DoctorDAO implements IDAO<DoctorDTO, Integer, LocalDate, LocalDate,
     }
 
     @Override
+    public DoctorDTO readById(Integer id) {
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<DoctorDTO> query = em.createQuery("SELECT new dat.dtos.DoctorDTO(d) FROM Doctor d WHERE d.id = :id", DoctorDTO.class);
+            query.setParameter("id", id);
+            DoctorDTO doctor = query.getSingleResult();
+//            Doctor doctor = em.find(Doctor.class, id);
+            return doctor;
+        }
+    }
+
     public List<DoctorDTO> readBySpeciality(Doctor.DoctorSpeciality speciality) {
         try (EntityManager em = emf.createEntityManager()) {
             TypedQuery<DoctorDTO> query = em.createQuery("SELECT new dat.dtos.DoctorDTO(d) FROM Doctor d WHERE d.speciality = :speciality", DoctorDTO.class);
@@ -61,22 +62,22 @@ public class DoctorDAO implements IDAO<DoctorDTO, Integer, LocalDate, LocalDate,
         }
     }
 
-    @Override
-    public List<DoctorDTO> readByBirthdayRange(LocalDate start, LocalDate end) {
+    public List<DoctorDTO> readByBirthdayRange(LocalDate from, LocalDate to) {
         try (EntityManager em = emf.createEntityManager()) {
             TypedQuery<DoctorDTO> query = em.createQuery("SELECT new dat.dtos.DoctorDTO(d) FROM Doctor d WHERE d.dateOfBirth BETWEEN :startDate AND :endDate ORDER BY d.dateOfBirth DESC", DoctorDTO.class);
-            query.setParameter("startDate", start);
-            query.setParameter("endDate", end);
+            query.setParameter("startDate", from);
+            query.setParameter("endDate", to);
             List<DoctorDTO> doctors = query.getResultList();
             if (doctors.isEmpty()) {
-                throw new EntityNotFoundException("No doctors found with birthday between: " + start + " and " + end);
+                throw new EntityNotFoundException("No doctors found with birthday between: " + from + " and " + to);
             }
             return doctors;
         }
     }
 
-    @Override
-    public DoctorDTO create(DoctorDTO doctorDTO) throws ApiException {
+
+    //Create a doctor and catch exceptions and throw them to the controller
+    public DoctorDTO create(DoctorDTO doctorDTO) throws ApiException, InvalidFormatException, JsonParseException {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             Doctor doctor = new Doctor(doctorDTO);
@@ -88,8 +89,9 @@ public class DoctorDAO implements IDAO<DoctorDTO, Integer, LocalDate, LocalDate,
         }
     }
 
+    //Update a doctor, and throw all exceptions to the controller
     @Override
-    public DoctorDTO update(Integer id, DoctorDTO updatedDoctorDTO) throws ApiException {
+    public DoctorDTO update(Integer id, DoctorDTO updatedDoctorDTO) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             Doctor doctor = em.find(Doctor.class, id);
@@ -118,15 +120,11 @@ public class DoctorDAO implements IDAO<DoctorDTO, Integer, LocalDate, LocalDate,
             Doctor mergedDoctor = em.merge(doctor);
             em.getTransaction().commit();
             return new DoctorDTO(mergedDoctor);
-        } catch (EntityNotFoundException e) {
-            throw new ApiException(404, e.getMessage());
-        } catch (Exception e) {
-            throw new ApiException(400, "Doctor could not be updated: " + e.getMessage());
         }
     }
 
     @Override
-    public void delete(Integer id) throws ApiException {
+    public void delete(Integer id) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             Doctor doctor = em.find(Doctor.class, id);
@@ -135,13 +133,8 @@ public class DoctorDAO implements IDAO<DoctorDTO, Integer, LocalDate, LocalDate,
                 em.getTransaction().rollback();
                 throw new EntityNotFoundException("Doctor with id: " + id + " not found");
             }
-
             em.remove(doctor);
             em.getTransaction().commit();
-        } catch (EntityNotFoundException e) {
-            throw new ApiException(404, e.getMessage());
-        } catch (Exception e) {
-            throw new ApiException(400, "Doctor could not be deleted: " + e.getMessage());
         }
     }
 

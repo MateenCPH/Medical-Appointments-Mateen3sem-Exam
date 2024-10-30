@@ -32,11 +32,11 @@ public class Populate {
 
     @NotNull
     private static Set<Doctor> getDoctors() {
-        Doctor doctor1 = new Doctor("Dr. John Doe", LocalDate.of(1975, 5, 20), 2000, "City Hospital", DoctorSpeciality.surgery);
-        Doctor doctor2 = new Doctor("Dr. Jane Smith", LocalDate.of(1980, 8, 15), 2005, "Downtown Clinic", DoctorSpeciality.family);
-        Doctor doctor3 = new Doctor("Dr. Emily Johnson", LocalDate.of(1983, 2, 10), 2007, "Central Medical Center", DoctorSpeciality.pediatrics);
-        Doctor doctor4 = new Doctor("Dr. William Brown", LocalDate.of(1970, 11, 5), 1995, "Northern Health Center", DoctorSpeciality.geriatrics);
-        Doctor doctor5 = new Doctor("Dr. Linda White", LocalDate.of(1985, 7, 25), 2010, "Westside Clinic", DoctorSpeciality.psychiatry);
+        Doctor doctor1 = new Doctor("Dr. John Doe", LocalDate.of(1944, 4, 4), 2000, "City Hospital", DoctorSpeciality.SURGERY);
+        Doctor doctor2 = new Doctor("Dr. Jane Smith", LocalDate.of(1955, 5, 5), 2005, "Downtown Clinic", DoctorSpeciality.FAMILY);
+        Doctor doctor3 = new Doctor("Dr. Emily Johnson", LocalDate.of(1966, 6, 6), 2007, "Central Medical Center", DoctorSpeciality.PEDIATRICS);
+        Doctor doctor4 = new Doctor("Dr. William Brown", LocalDate.of(1977, 7, 7), 1995, "Northern Health Center", DoctorSpeciality.GERIATRICS);
+        Doctor doctor5 = new Doctor("Dr. Linda White", LocalDate.of(1999, 9, 9), 2010, "Westside Clinic", DoctorSpeciality.PSYCHIATRY);
 
         Doctor[] doctorArray = {doctor1, doctor2, doctor3, doctor4, doctor5};
         return Set.of(doctorArray);

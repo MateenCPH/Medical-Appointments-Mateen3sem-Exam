@@ -1,9 +1,7 @@
 package dat.dtos;
 
 import dat.entities.Doctor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,8 +9,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
+@Setter
+@ToString
+@AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Builder
+
 public class DoctorDTO {
 
     private Integer id;
@@ -31,8 +33,12 @@ public class DoctorDTO {
         this.speciality = doctor.getSpeciality();
     }
 
-    public List<DoctorDTO> toDoctorDTOList(List<Doctor> doctors) {
-        return doctors.stream().map(DoctorDTO::new).collect(Collectors.toList());
+    public DoctorDTO (String name, LocalDate dateOfBirth, int yearOfGraduation, String clinic, Doctor.DoctorSpeciality speciality) {
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.yearOfGraduation = yearOfGraduation;
+        this.clinic = clinic;
+        this.speciality = speciality;
     }
 
     @Override

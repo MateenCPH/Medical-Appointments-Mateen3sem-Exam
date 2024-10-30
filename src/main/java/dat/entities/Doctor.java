@@ -13,8 +13,10 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@ToString
 @Builder
+@Getter
+@Setter
 
 public class Doctor {
 
@@ -23,6 +25,7 @@ public class Doctor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique = true)
     private String name;
 
     @Column(name = "date_of_birth")
@@ -94,7 +97,7 @@ public class Doctor {
     }
 
     public enum DoctorSpeciality {
-        surgery, family, medicin, psychiatry, pediatrics, geriatrics, empty, mySpeciality;
+        SURGERY, FAMILY, MEDICINE, PSYCHIATRY, PEDIATRICS, GERIATRICS, EMPTY, MYSPECIALITY;
     }
 
 }

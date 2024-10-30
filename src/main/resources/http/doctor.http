@@ -47,13 +47,13 @@ Authorization: Bearer {{jwt_token}}
 GET {{url}}/doctors
 
 ###
-GET {{url}}/doctors/6
+GET {{url}}/doctors/7
 
 ###
-GET {{url}}/doctors/speciality/empty
+GET {{url}}/doctors/speciality/EMPTY
 
 ###
-GET {{url}}/doctors/birthday/range/1970-01-01/1981-01-01
+GET {{url}}/doctors/birthdate/range?from=1955-05-05&to=1977-07-07
 
 ###
 
@@ -63,15 +63,15 @@ Accept: application/json
 Authorization: Bearer {{jwt_token}}
 
 {
-  "name": "My created doctor",
+  "name": 2300,
   "dateOfBirth": "2023-01-01",
-  "yearOfGraduation": 2010,
+  "yearOfGraduation": 2122,
   "clinic": "My clinic",
-  "speciality": "mySpeciality"
+  "speciality": "MYSPECIALITY"
 }
 
 ###
-PUT {{url}}/doctors/6
+PUT {{url}}/doctors/1
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{jwt_token}}
@@ -81,4 +81,4 @@ Authorization: Bearer {{jwt_token}}
 }
 
 ###
-DELETE {{url}}/doctors/6
+DELETE {{url}}/doctors/8as
