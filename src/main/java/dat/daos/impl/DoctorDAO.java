@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,7 +46,6 @@ public class DoctorDAO implements IDAO<DoctorDTO, Integer> {
             TypedQuery<DoctorDTO> query = em.createQuery("SELECT new dat.dtos.DoctorDTO(d) FROM Doctor d WHERE d.id = :id", DoctorDTO.class);
             query.setParameter("id", id);
             DoctorDTO doctor = query.getSingleResult();
-//            Doctor doctor = em.find(Doctor.class, id);
             return doctor;
         }
     }
@@ -55,9 +55,6 @@ public class DoctorDAO implements IDAO<DoctorDTO, Integer> {
             TypedQuery<DoctorDTO> query = em.createQuery("SELECT new dat.dtos.DoctorDTO(d) FROM Doctor d WHERE d.speciality = :speciality", DoctorDTO.class);
             query.setParameter("speciality", speciality);
             List<DoctorDTO> doctors = query.getResultList();
-            if (doctors.isEmpty()) {
-                throw new EntityNotFoundException("No doctors found with speciality: " + speciality);
-            }
             return doctors;
         }
     }
@@ -75,9 +72,8 @@ public class DoctorDAO implements IDAO<DoctorDTO, Integer> {
         }
     }
 
-
     //Create a doctor and catch exceptions and throw them to the controller
-    public DoctorDTO create(DoctorDTO doctorDTO) throws ApiException, InvalidFormatException, JsonParseException {
+    public DoctorDTO create(DoctorDTO doctorDTO) throws InvalidFormatException, JsonParseException {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             Doctor doctor = new Doctor(doctorDTO);
@@ -120,6 +116,8 @@ public class DoctorDAO implements IDAO<DoctorDTO, Integer> {
             Doctor mergedDoctor = em.merge(doctor);
             em.getTransaction().commit();
             return new DoctorDTO(mergedDoctor);
+        } catch (ConstraintViolationException e) {
+            throw new ApiException(400, "Doctor could not be updated: " + e.getMessage());
         }
     }
 
@@ -135,14 +133,6 @@ public class DoctorDAO implements IDAO<DoctorDTO, Integer> {
             }
             em.remove(doctor);
             em.getTransaction().commit();
-        }
-    }
-
-    @Override
-    public boolean validatePrimaryKey(Integer integer) {
-        try (EntityManager em = emf.createEntityManager()) {
-            Doctor doctor = em.find(Doctor.class, integer);
-            return doctor != null;
         }
     }
 }

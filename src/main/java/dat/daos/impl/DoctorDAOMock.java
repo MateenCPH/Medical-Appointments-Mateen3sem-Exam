@@ -35,7 +35,6 @@ public class DoctorDAOMock implements IDAO<DoctorDTO, Integer> {
         create(new DoctorDTO(7, "Dr. Joe Rasmussen", LocalDate.of(1977, 7, 7), 2077, "Clinic 7", Doctor.DoctorSpeciality.GERIATRICS));
     }
 
-
     @Override
     public List<DoctorDTO> readAll() {
         return new ArrayList<>(doctors);
@@ -91,10 +90,5 @@ public class DoctorDAOMock implements IDAO<DoctorDTO, Integer> {
     @Override
     public void delete(Integer integer) {
 
-    }
-
-    @Override
-    public boolean validatePrimaryKey(Integer integer) {
-        return false;
     }
 }

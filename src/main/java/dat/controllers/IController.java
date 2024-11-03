@@ -11,5 +11,4 @@ public interface IController<T, D> {
     void create(Context ctx);
     void update(Context ctx);
     void delete(Context ctx);
-
 }

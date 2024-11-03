@@ -2,7 +2,6 @@ package dat.controllers.impl;
 
 import dat.exceptions.ApiException;
 import dat.exceptions.Message;
-import dat.routes.Routes;
 import io.javalin.http.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,18 +9,17 @@ import org.slf4j.LoggerFactory;
 import java.sql.Timestamp;
 
 public class ExceptionController {
-    private final Logger LOGGER = LoggerFactory.getLogger(Routes.class);
+    private final Logger log = LoggerFactory.getLogger(ExceptionController.class);
 
     public void apiExceptionHandler(ApiException e, Context ctx) {
-        LOGGER.error(ctx.attribute("requestInfo") + " " + ctx.res().getStatus() + " " + e.getMessage());
+        log.error("STATUS: {}, MESSAGE: {}", e.getStatusCode(), e.getMessage());
         ctx.status(e.getStatusCode());
-        ctx.json(new Message(e.getStatusCode(), e.getMessage()));
+        ctx.json(new Message(e.getStatusCode(), e.getMessage(), e.getTimeStamp()));
     }
     public void exceptionHandler(Exception e, Context ctx) {
-        LOGGER.error(ctx.attribute("requestInfo") + " " + ctx.res().getStatus() + " " + e.getMessage());
+        log.error("STATUS: {}, MESSAGE: {}, TYPE: {}", ctx.res().getStatus(), e.getMessage(), e.getClass());
         ctx.status(500);
         String now = new Timestamp(System.currentTimeMillis()).toString();
-        ctx.json(new Message(500, e.getMessage()));
+        ctx.json(new Message(500, e.getMessage(), now));
     }
-
 }

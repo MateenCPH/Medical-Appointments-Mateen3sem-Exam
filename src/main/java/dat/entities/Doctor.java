@@ -65,7 +65,6 @@ public class Doctor {
         this.yearOfGraduation = doctorDTO.getYearOfGraduation();
         this.clinic = doctorDTO.getClinic();
         this.speciality = doctorDTO.getSpeciality();
-
     }
 
     @PrePersist
@@ -99,5 +98,4 @@ public class Doctor {
     public enum DoctorSpeciality {
         SURGERY, FAMILY, MEDICINE, PSYCHIATRY, PEDIATRICS, GERIATRICS, EMPTY, MYSPECIALITY;
     }
-
 }

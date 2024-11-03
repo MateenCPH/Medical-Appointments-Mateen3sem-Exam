@@ -23,7 +23,6 @@ public class DoctorRoutes {
 //            post("/", doctorMockController::create, Role.ANYONE);
 //            put("/{id}", doctorMockController::update);
 
-
             //Hibernate
             get("/", doctorController::readAll, Role.ANYONE);
             get("/{id}", doctorController::readById, Role.ANYONE);
